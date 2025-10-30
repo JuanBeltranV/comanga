@@ -1,52 +1,74 @@
-// src/context/ProductsContext.jsx
+// context/ProductsContext.js
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { PRODUCTOS as SEED } from "../data/productos";
 
-const KEY = "admin_products_v1";
-const ProductsContext = createContext();
+const Ctx = createContext(null);
 
 export function ProductsProvider({ children }) {
   const [products, setProducts] = useState(() => {
     try {
-      const raw = localStorage.getItem(KEY);
+      const raw = localStorage.getItem("comanga_products");
       return raw ? JSON.parse(raw) : SEED;
     } catch {
       return SEED;
     }
   });
 
-  useEffect(() => {
-    localStorage.setItem(KEY, JSON.stringify(products));
-  }, [products]);
-
-  const productsById = useMemo(() => {
-    const m = new Map();
-    for (const p of products) m.set(p.id, p);
-    return m;
-  }, [products]);
-
-  const nextId = useMemo(
-    () => (products.length ? Math.max(...products.map(x => x.id)) + 1 : 1),
+  const productsById = useMemo(
+    () => new Map(products.map((p) => [p.id, p])),
     [products]
   );
 
-  const addProduct = (p) => setProducts(prev => [...prev, { ...p }]);
-  const updateProduct = (id, patch) =>
-    setProducts(prev => prev.map(p => (p.id === id ? { ...p, ...patch } : p)));
-  const removeProduct = (id) => setProducts(prev => prev.filter(p => p.id !== id));
-  const resetProducts = () => setProducts(SEED);
+  useEffect(() => {
+    localStorage.setItem("comanga_products", JSON.stringify(products));
+  }, [products]);
 
-  const value = {
-    products,
-    productsById,
-    nextId,
-    addProduct,
-    updateProduct,
-    removeProduct,
-    resetProducts,
+  // Helper para IDs
+  const getNextId = () =>
+    products.length ? Math.max(...products.map((x) => x.id || 0)) + 1 : 1;
+
+  // Normalizador
+  const normalize = (p) => ({
+    ...p,
+    precio: Number(p.precio) || 0,
+    categoria: (p.categoria || "").toLowerCase().replace("cómic", "comic"),
+  });
+
+  const addProduct = (p) => {
+    const withId = { ...p, id: p.id ?? getNextId() };
+    const norm = normalize(withId);
+    setProducts((prev) => [norm, ...prev]);
   };
 
-  return <ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>;
+  const updateProduct = (id, patch) => {
+    setProducts((prev) =>
+      prev.map((p) => (p.id === id ? normalize({ ...p, ...patch, id }) : p))
+    );
+  };
+
+  const removeProduct = (id) => {
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const resetToSeed = () => {
+    setProducts(SEED);
+  };
+
+  return (
+    <Ctx.Provider
+      value={{
+        products,
+        productsById,
+        addProduct,
+        updateProduct,
+        removeProduct,
+        resetToSeed,
+        getNextId,
+      }}
+    >
+      {children}
+    </Ctx.Provider>
+  );
 }
 
-export const useProducts = () => useContext(ProductsContext);
+export const useProducts = () => useContext(Ctx);

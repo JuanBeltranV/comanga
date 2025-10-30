@@ -1,42 +1,31 @@
-// src/hooks/useAdminProducts.js
-import { useEffect, useMemo, useState } from "react";
-import { PRODUCTOS } from "../data/productos";
-
-const STORAGE_KEY = "admin_products";
-
-function migrate(items) {
-  // borra campos obsoletos
-  return items.map(({ codigo, stock, ...rest }) => rest);
-}
+// hooks/useAdminProducts.js
+import { useMemo } from "react";
+import { useProducts } from "../context/ProductsContext";
 
 export function useAdminProducts() {
-  const [items, setItems] = useState(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return PRODUCTOS;
-      const parsed = JSON.parse(raw);
-      return migrate(Array.isArray(parsed) ? parsed : PRODUCTOS);
-    } catch {
-      return PRODUCTOS;
-    }
+  const {
+    products,
+    addProduct,
+    updateProduct,
+    removeProduct,
+    resetToSeed,
+    getNextId,
+  } = useProducts();
+
+  const items = products;
+
+  // Normaliza lo que viene del formulario del Admin
+  const normalize = (p) => ({
+    ...p,
+    precio: Number(p.precio) || 0,
+    categoria: (p.categoria || "").toLowerCase().replace("cómic", "comic"),
   });
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
+  const add = (p) => addProduct(normalize(p));
+  const update = (id, patch) => updateProduct(id, normalize({ ...patch, id }));
+  const remove = (id) => removeProduct(id);
 
-  const productsById = useMemo(() => {
-    const m = new Map();
-    items.forEach(p => m.set(p.id, p));
-    return m;
-  }, [items]);
+  const nextId = useMemo(() => getNextId(), [products, getNextId]);
 
-  const nextId = useMemo(() => (items.length ? Math.max(...items.map(p => p.id)) + 1 : 1), [items]);
-
-  const add = (prod) => setItems(prev => [...prev, prod]);
-  const update = (id, patch) => setItems(prev => prev.map(p => (p.id === id ? { ...p, ...patch } : p)));
-  const remove = (id) => setItems(prev => prev.filter(p => p.id !== id));
-  const resetToSeed = () => setItems(PRODUCTOS);
-
-  return { items, productsById, add, update, remove, resetToSeed, nextId };
+  return { items, add, update, remove, resetToSeed, nextId };
 }

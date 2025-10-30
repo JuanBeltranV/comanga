@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { PRODUCTOS } from "../data/productos";
+import { useProducts } from "../context/ProductsContext";
 
 const CLP = new Intl.NumberFormat("es-CL", {
   style: "currency",
@@ -12,8 +12,9 @@ const CLP = new Intl.NumberFormat("es-CL", {
 
 export default function Productos() {
   const { addItem } = useCart();
+  const { products } = useProducts(); // ✅ ahora viene del contexto
 
-  const [categoria, setCategoria] = useState("");
+  const [categoriaVis, setCategoriaVis] = useState(""); // "", "Manga", "Cómic"
   const [q, setQ] = useState("");
 
   useEffect(() => {
@@ -21,10 +22,20 @@ export default function Productos() {
     window.scrollTo(0, 0);
   }, []);
 
+  // Mapea la categoría visible (select) a la que guarda el contexto (minúsculas)
+  const categoriaCtx = useMemo(() => {
+    if (!categoriaVis) return "";
+    if (categoriaVis === "Manga") return "manga";
+    if (categoriaVis === "Cómic") return "comic";
+    return categoriaVis.toLowerCase();
+  }, [categoriaVis]);
+
   const lista = useMemo(() => {
-    return PRODUCTOS.filter((p) => {
-      const okCat = categoria ? p.categoria === categoria : true;
-      const term = q.trim().toLowerCase();
+    const base = products || [];
+    const term = q.trim().toLowerCase();
+
+    return base.filter((p) => {
+      const okCat = categoriaCtx ? (p.categoria || "") === categoriaCtx : true;
       const okQ = term
         ? (p.nombre || "").toLowerCase().includes(term) ||
           (p.autor || "").toLowerCase().includes(term) ||
@@ -32,7 +43,7 @@ export default function Productos() {
         : true;
       return okCat && okQ;
     });
-  }, [categoria, q]);
+  }, [products, categoriaCtx, q]);
 
   const imgSrc = (path) => (path?.startsWith("/") ? path : `/${path}`);
 
@@ -54,8 +65,8 @@ export default function Productos() {
         <label htmlFor="fCategoria">Categoría</label>
         <select
           id="fCategoria"
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value)}
+          value={categoriaVis}
+          onChange={(e) => setCategoriaVis(e.target.value)}
         >
           <option value="">Todas</option>
           <option value="Manga">Manga</option>
@@ -85,11 +96,18 @@ export default function Productos() {
         {lista.map((p) => (
           <article key={p.id} className="card">
             <Link to={`/producto/${p.id}`}>
-              <img
-                src={imgSrc(p.imagen)}
-                alt={p.nombre}
-                loading="lazy"
-              />
+              {p.imagen ? (
+                <img src={imgSrc(p.imagen)} alt={p.nombre} loading="lazy" />
+              ) : (
+                <div
+                  style={{
+                    width: "100%",
+                    height: 420,
+                    background: "#111",
+                    borderBottom: "1px solid #262626",
+                  }}
+                />
+              )}
             </Link>
 
             <div className="p">
@@ -104,7 +122,16 @@ export default function Productos() {
               <div className="row">
                 <button
                   className="btn"
-                  onClick={() => addItem({ id: p.id, name: p.nombre, image: p.imagen }, 1)}
+                  onClick={() =>
+                    addItem(
+                      {
+                        id: p.id,
+                        name: p.nombre,
+                        image: imgSrc(p.imagen),
+                      },
+                      1
+                    )
+                  }
                   aria-label={`Agregar ${p.nombre} al carrito`}
                 >
                   Agregar al carrito

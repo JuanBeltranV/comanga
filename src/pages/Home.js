@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { PRODUCTOS } from "../data/productos";
+// ❌ import { PRODUCTOS } from "../data/productos";
 import { useCart } from "../context/CartContext";
+import { useProducts } from "../context/ProductsContext";
 
 function getRandomThree(arr) {
   if (!arr?.length) return [];
@@ -15,14 +16,16 @@ function getRandomThree(arr) {
 
 export default function Home() {
   const { addItem } = useCart();
-  const destacados = useMemo(() => getRandomThree(PRODUCTOS), []);
+  const { products } = useProducts(); // ✅ ahora viene del contexto
+
+  const destacados = useMemo(() => getRandomThree(products || []), [products]);
 
   const imgSrc = (path) => (path?.startsWith("/") ? path : `/${path}`);
 
   return (
     <>
       {/* HERO FULL-WIDTH */}
-      <section className="hero-full" aria-label="Banner principal">
+      <section className="hero-full full-bleed" aria-label="Banner principal">
         <div className="hero-bg">
           <img src="/assets/banners/hero.jpg" alt="Colección de cómics y mangas" />
           <div className="hero-overlay">
@@ -32,13 +35,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA (más ancha) */}
-      <section className="hero-cta container container--xl">
-        <Link className="btn" to="/productos">Ver productos</Link>
+      {/* CTA */}
+      <section className="hero-cta container">
+        <Link className="btn btn-xl btn-wide" to="/productos">Ver productos</Link>
       </section>
 
-      {/* DESTACADOS CENTRADOS (más ancho y grid centrada) */}
-      <section className="container container--xl">
+      {/* DESTACADOS */}
+      <section className="container">
         <div className="center-block center-text">
           <h2>Destacados</h2>
           <div id="gridDestacados" className="grid grid-center">
@@ -54,7 +57,7 @@ export default function Home() {
                 </Link>
                 <div className="p">
                   <h3>{p.nombre}</h3>
-                  <div className="muted">{p.autor} · {p.editorial}</div>
+                  <div className="muted">{[p.autor, p.editorial].filter(Boolean).join(" · ")}</div>
                   <div className="price">
                     {p.precio?.toLocaleString("es-CL", {
                       style: "currency",
@@ -63,9 +66,9 @@ export default function Home() {
                     })}
                   </div>
                   <div className="row">
-                    <Link className="btn btn-outline" to={`/producto/${p.id}`}>Ver detalle</Link>
+                    <Link className="btn btn-outline btn-lg" to={`/producto/${p.id}`}>Ver detalle</Link>
                     <button
-                      className="btn"
+                      className="btn btn-lg"
                       onClick={() =>
                         addItem({ id: p.id, name: p.nombre, image: imgSrc(p.imagen) }, 1)
                       }
