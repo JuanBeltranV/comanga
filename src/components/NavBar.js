@@ -2,6 +2,7 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useCart } from "../context/CartContext";
+
 const logo = process.env.PUBLIC_URL + "/assets/logo.svg";
 
 export default function NavBar() {
@@ -32,13 +33,42 @@ export default function NavBar() {
         {/* Menú */}
         <nav id="navMenu" aria-label="Principal" ref={menu}>
           <ul className="nav">
-            <li><NavLink to="/" end>Home</NavLink></li>
-            <li><NavLink to="/productos">Productos</NavLink></li>
-            <li><NavLink to="/blog">Blog</NavLink></li>
-            <li><NavLink to="/nosotros">Nosotros</NavLink></li>
-            <li><NavLink to="/contacto">Contacto</NavLink></li>
-            <li><NavLink to="/registro">Registrarse</NavLink></li>
-            <li><NavLink to="/login">Login</NavLink></li>
+            <li>
+              <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
+                Home
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/productos" className={({ isActive }) => (isActive ? "active" : "")}>
+                Productos
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/blog" className={({ isActive }) => (isActive ? "active" : "")}>
+                Blog
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/nosotros" className={({ isActive }) => (isActive ? "active" : "")}>
+                Nosotros
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/contacto" className={({ isActive }) => (isActive ? "active" : "")}>
+                Contacto
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/registro" className={({ isActive }) => (isActive ? "active" : "")}>
+                Registrarse
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
+                Login
+              </NavLink>
+            </li>
+            <li><NavLink to="/admin">Admin</NavLink></li> 
           </ul>
         </nav>
 
