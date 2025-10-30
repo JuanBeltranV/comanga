@@ -1,7 +1,7 @@
 import { ProductsProvider } from "../src/context/ProductsContext.js";
 
 describe("ProductsContext", () => {
- it("debería cargar productos iniciales correctamente", () => {
+it("debería cargar productos iniciales correctamente", () => {
     const provider = new ProductsProvider({});
     expect(provider).toBeDefined();
 });
