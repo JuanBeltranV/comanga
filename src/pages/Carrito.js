@@ -1,4 +1,3 @@
-// src/pages/Carrito.jsx
 import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -13,7 +12,12 @@ export default function Carrito() {
 
   useEffect(() => { document.title = "Carrito – Comanga"; }, []);
 
-  const imgSrc = (path) => (path?.startsWith("/") ? path : `/${path}`);
+  // ✅ Soporta http/https, data:, y rutas locales
+  const imgSrc = (path) => {
+    if (!path) return "";
+    if (/^(https?:)?\/\//i.test(path) || path.startsWith("data:")) return path;
+    return path.startsWith("/") ? path : `/${path}`;
+  };
 
   if (!items.length) {
     return (
@@ -34,7 +38,7 @@ export default function Carrito() {
           const live = getProductSnapshot(it.id);
           const name = live?.nombre ?? it.name ?? "Producto";
           const price = live?.precio ?? 0;
-          const image = live?.imagen ? imgSrc(live.imagen) : it.image;
+          const image = live?.imagen ? imgSrc(live.imagen) : imgSrc(it.image);
 
           return (
             <article key={it.id} className="cart-row">

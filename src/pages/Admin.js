@@ -8,7 +8,7 @@ const emptyForm = {
   nombre: "",
   categoria: "Manga",
   precio: 0,
-  imagen: "",     // URL pública o DataURL (si en algún momento decides reactivar subida)
+  imagen: "",     // URL pública o DataURL
   sinopsis: "",
   autor: "",
   editorial: ""
@@ -78,9 +78,10 @@ export default function Admin() {
     }
   }
 
+  // ✅ Soporta http/https, data:, y rutas locales
   const imgSrc = (path) => {
     if (!path) return "";
-    if (path.startsWith("data:")) return path;
+    if (/^(https?:)?\/\//i.test(path) || path.startsWith("data:")) return path;
     return path.startsWith("/") ? path : `/${path}`;
   };
 

@@ -1,4 +1,3 @@
-// src/pages/Productos.jsx
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -45,7 +44,12 @@ export default function Productos() {
     });
   }, [products, categoriaCtx, q]);
 
-  const imgSrc = (path) => (path?.startsWith("/") ? path : `/${path}`);
+  // ✅ Soporta http/https, data:, y rutas locales
+  const imgSrc = (path) => {
+    if (!path) return "";
+    if (/^(https?:)?\/\//i.test(path) || path.startsWith("data:")) return path;
+    return path.startsWith("/") ? path : `/${path}`;
+  };
 
   return (
     <>

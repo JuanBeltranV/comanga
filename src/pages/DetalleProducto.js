@@ -1,4 +1,3 @@
-// src/pages/DetalleProducto.js
 import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useProducts } from "../context/ProductsContext";
@@ -25,13 +24,14 @@ export default function DetalleProducto() {
 
   const [qty, setQty] = useState(1);
 
+  // ✅ Soporta http/https, data:, y rutas locales
   const imgSrc = (path) => {
     if (!path) return "";
-    if (path.startsWith("data:")) return path; // por si en el futuro vuelves a DataURL
+    if (/^(https?:)?\/\//i.test(path) || path.startsWith("data:")) return path;
     return path.startsWith("/") ? path : `/${path}`;
   };
 
-  // 👇 TODOS los hooks deben declararse antes de cualquier return condicional
+  // Hooks calculados
   const totalLinea = useMemo(() => {
     const price = producto?.precio ?? 0;
     return price * (qty || 1);
@@ -45,7 +45,6 @@ export default function DetalleProducto() {
     return sameCat.slice(0, 4);
   }, [products, producto]);
 
-  // Ahora sí, retornos condicionales DESPUÉS de definir hooks:
   if (!producto) {
     return (
       <main className="container" style={{ padding: "1rem 0 2rem" }}>
@@ -59,7 +58,6 @@ export default function DetalleProducto() {
   const { nombre, sinopsis, autor, editorial, precio, categoria, imagen } = producto;
 
   const handleAdd = () => {
-    // En carrito calculamos precio “vivo”; aquí pasamos id/nombre/imagen
     addItem(
       { id: producto.id, name: producto.nombre, image: imgSrc(producto.imagen) },
       Math.max(1, qty)

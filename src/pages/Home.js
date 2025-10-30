@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-// ❌ import { PRODUCTOS } from "../data/productos";
 import { useCart } from "../context/CartContext";
 import { useProducts } from "../context/ProductsContext";
 
@@ -20,7 +19,12 @@ export default function Home() {
 
   const destacados = useMemo(() => getRandomThree(products || []), [products]);
 
-  const imgSrc = (path) => (path?.startsWith("/") ? path : `/${path}`);
+  // ✅ Soporta http/https, data:, y rutas locales
+  const imgSrc = (path) => {
+    if (!path) return "";
+    if (/^(https?:)?\/\//i.test(path) || path.startsWith("data:")) return path;
+    return path.startsWith("/") ? path : `/${path}`;
+  };
 
   return (
     <>
