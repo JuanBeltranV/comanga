@@ -41,7 +41,7 @@ export default function App() {
           <ScrollToTop />
           <NavBar />
 
-          {/* Quitamos .container aquí para que las páginas puedan hacer full-bleed donde lo necesiten */}
+          
           <main style={{ padding: "1rem 0 2rem" }}>
             <Routes>
               <Route path="/" element={<Home />} />
