@@ -15,11 +15,11 @@ function getRandomThree(arr) {
 
 export default function Home() {
   const { addItem } = useCart();
-  const { products } = useProducts(); // ✅ ahora viene del contexto
+  const { products } = useProducts();
 
   const destacados = useMemo(() => getRandomThree(products || []), [products]);
 
-  // ✅ Soporta http/https, data:, y rutas locales
+
   const imgSrc = (path) => {
     if (!path) return "";
     if (/^(https?:)?\/\//i.test(path) || path.startsWith("data:")) return path;
