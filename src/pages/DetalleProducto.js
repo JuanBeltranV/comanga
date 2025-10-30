@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useProducts } from "../context/ProductsContext";
-import { useCart } from "../context/CartContext";
+import { useProducts } from "../context/ProductsContext.js";
+import { useCart } from "../context/CartContext.js";
 
 const CLP = new Intl.NumberFormat("es-CL", {
   style: "currency",

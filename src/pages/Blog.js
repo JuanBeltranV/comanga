@@ -1,6 +1,6 @@
 // src/pages/Blog.jsx
 import { Link } from "react-router-dom";
-import { POSTS, formatFecha } from "../data/posts";
+import { POSTS, formatFecha } from "../data/posts.js";
 
 export default function Blog() {
   return (

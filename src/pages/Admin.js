@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAdminProducts } from "../hooks/useAdminProducts";
+import { useAdminProducts } from "../hooks/useAdminProducts.js";
 
 const CLP = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 

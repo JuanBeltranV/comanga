@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
-import { useProducts } from "../context/ProductsContext";
+import { useCart } from "../context/CartContext.js";
+import { useProducts } from "../context/ProductsContext.js";
 
 function getRandomThree(arr) {
   if (!arr?.length) return [];

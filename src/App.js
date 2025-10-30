@@ -3,26 +3,26 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
 // Contextos
-import { ProductsProvider } from "./context/ProductsContext";
-import { CartProvider } from "./context/CartContext";
-import { AuthProvider } from "./context/AuthContext";
+import { ProductsProvider } from "./context/ProductsContext.js";
+import { CartProvider } from "./context/CartContext.js";
+import { AuthProvider } from "./context/AuthContext.js";
 
 // Layout
-import NavBar from "./components/NavBar";
-import Footer from "./components/Footer";
+import NavBar from "./components/NavBar.js";
+import Footer from "./components/Footer.js";
 
 // Páginas
-import Home from "./pages/Home";
-import Productos from "./pages/Productos";
-import DetalleProducto from "./pages/DetalleProducto";
-import Blog from "./pages/Blog";
-import DetalleBlog from "./pages/DetalleBlog";
-import Nosotros from "./pages/Nosotros";
-import Contacto from "./pages/Contacto";
-import Login from "./pages/Login";
-import Registro from "./pages/Registro";
-import Carrito from "./pages/Carrito";
-import Admin from "./pages/Admin";
+import Home from "./pages/Home.js";
+import Productos from "./pages/Productos.js";
+import DetalleProducto from "./pages/DetalleProducto.js";
+import Blog from "./pages/Blog.js";
+import DetalleBlog from "./pages/DetalleBlog.js";
+import Nosotros from "./pages/Nosotros.js";
+import Contacto from "./pages/Contacto.js";
+import Login from "./pages/Login.js";
+import Registro from "./pages/Registro.js";
+import Carrito from "./pages/Carrito.js";
+import Admin from "./pages/Admin.js";
 
 function ScrollToTop() {
   const { pathname } = useLocation();

@@ -1,7 +1,7 @@
 // src/components/NavBar.jsx
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/CartContext.js";
 
 const logo = process.env.PUBLIC_URL + "/assets/logo.svg";
 

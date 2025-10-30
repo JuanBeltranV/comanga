@@ -1,6 +1,6 @@
 // context/ProductsContext.js
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { PRODUCTOS as SEED } from "../data/productos";
+import { PRODUCTOS as SEED } from "../data/productos.js";
 
 const Ctx = createContext(null);
 

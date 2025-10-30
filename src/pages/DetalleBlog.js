@@ -1,7 +1,7 @@
 // src/pages/DetalleBlog.jsx
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { POSTS, formatFecha } from "../data/posts";
+import { POSTS, formatFecha } from "../data/posts.js";
 
 export default function DetalleBlog() {
   const { slug } = useParams();

@@ -1,6 +1,6 @@
 // hooks/useAdminProducts.js
 import { useMemo } from "react";
-import { useProducts } from "../context/ProductsContext";
+import { useProducts } from "../context/ProductsContext.js";
 
 export function useAdminProducts() {
   const {
