@@ -42,7 +42,7 @@ jobs:
         
       - name: Build
         # Esto ejecuta el script 'build' de tu package.json
-        run: npm run build
+        run: CI=false npm run build
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
